@@ -65,7 +65,7 @@ def main():
     args = parser.parse_args()
     if args.destination.exists():
         parser.error(f"Destination already exists: {args.destination}")
-    sites = sorted(path for path in args.source.iterdir() if path.is_dir())
+    sites = sorted(path for path in args.source.iterdir() if path.is_dir() and path.name != "JAX_164")
     if not sites:
         parser.error(f"No sites found in {args.source}")
 

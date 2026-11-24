@@ -1,16 +1,16 @@
 # SatSplat PERS reproduction data
 
-The prepared research data contain 14 sites and 363 RGB views. Tables S1 and S2 in the paper report 13 sites. JAX_164 is an additional site from the research dataset.
+The prepared benchmark data contain the 13 sites reported in Tables S1 and S2 of the paper, with 340 RGB views.
 
 ## Prepare benchmark scenes
 
-The public geometry archive contains fitted affine cameras, stereo-derived coarse DSMs and DFC2019 crop offsets. The setup script reads all eight JAX and three OMA scenes from the official DFC2019 Track 3 files. It retrieves the three IARPA scenes from the EOGS release and generates orthophotos from the coarse DSM and affine cameras locally. Automatic downloads are checked against SHA-256 digests. [Geometry release](https://github.com/GDAOSU/SatSplat-PERS/releases/tag/v1.0.3) · [EOGS dataset](https://github.com/mezzelfo/EOGS/releases/tag/dataset_v01)
+The public geometry archive contains fitted affine cameras, stereo-derived coarse DSMs and DFC2019 crop offsets. The setup script reads seven JAX and three OMA scenes from the official DFC2019 Track 3 files. It retrieves the three IARPA scenes from the EOGS release and generates orthophotos from the coarse DSM and affine cameras locally. Automatic downloads are checked against SHA-256 digests. [Geometry release](https://github.com/GDAOSU/SatSplat-PERS/releases/tag/v1.0.4) · [EOGS dataset](https://github.com/mezzelfo/EOGS/releases/tag/dataset_v01)
 
 ```bash
 pixi run --locked python scripts/fetch_dataset.py data/SatSplatDataset_PERS --dfc-source /path/to/Track3
 ```
 
-With `--dfc-source` the default is all 14 scenes. Without it, the script defaults to IARPA_001, IARPA_002 and IARPA_003. Use `--sites` to select a subset. The EOGS archive is approximately 1.1 GB and is only downloaded when an IARPA scene is selected. Downloads are cached in a sibling `SatSplat-downloads` directory. To reuse a prior download, provide `--eogs-zip /path/to/data.zip` and optionally `--geometry /path/to/SatSplatDataset_PERS_geometry.tar.gz`.
+With `--dfc-source` the default is all 13 scenes. Without it, the script defaults to IARPA_001, IARPA_002 and IARPA_003. Use `--sites` to select a subset. The EOGS archive is approximately 1.1 GB and is only downloaded when an IARPA scene is selected. Downloads are cached in a sibling `SatSplat-downloads` directory. To reuse a prior download, provide `--eogs-zip /path/to/data.zip` and optionally `--geometry /path/to/SatSplatDataset_PERS_geometry.tar.gz`.
 
 For the DFC2019 scenes, download the Track 3 training MSI and reference files via IEEE DataPort. Pass the extracted directory or repeat `--dfc-source` for multiple zip files. The script reads the MSI bands and reproduces the PERS crop using the source RPC offsets. Original Track 3 RGB files with matching RPC offsets also work and can produce different scores. [IEEE DataPort Track 3](https://doi.org/10.21227/c6tm-vw12)
 
