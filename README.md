@@ -6,30 +6,24 @@ SatSplat reconstructs georeferenced digital surface models (DSMs) and orthophoto
 
 ## Install
 
-Use Linux x86-64, Python 3.12, an NVIDIA GPU with a CUDA 12.6-compatible driver, CUDA Toolkit 12.6 with `nvcc`, a C++ compiler supported by the toolkit, and [uv](https://docs.astral.sh/uv/getting-started/installation/) 0.11.4. GCC 11 and the RTX 6000 Ada were used for validation. Budget several GB for the CUDA Python environment and build cache.
+Use Linux x86-64 with glibc 2.28 or newer, an NVIDIA driver that supports CUDA 12.6, and [Pixi](https://pixi.sh/latest/installation/) 0.84.2 or newer. The lock contains Python 3.12, the PyTorch CUDA 12.6 wheels, the CUDA compiler and development headers, GCC 11, and the exact affine gsplat commit. Budget several GB of disk space for the environment and build cache.
 
-From the repository root, set `CUDA_HOME` to your CUDA 12.6 installation, then install the locked environment. `BUILD_NO_CUDA=1` installs the pinned gsplat source and lets it compile its CUDA extension against the active PyTorch on first use.
+From the repository root, install the locked environment and compile gsplat against the installed PyTorch. The first compilation can take several minutes.
 
 ```bash
-export CUDA_HOME=/usr/local/cuda-12.6
-export MAX_JOBS=4
-export TORCH_EXTENSIONS_DIR="$PWD/.venv/torch_extensions"
-"$CUDA_HOME/bin/nvcc" --version
-
-uv python install 3.12
-BUILD_NO_CUDA=1 uv sync --locked
-uv run --no-sync python -c 'import torch; from gsplat.cuda._backend import _C; assert torch.cuda.is_available() and _C is not None; print(torch.__version__, torch.cuda.get_device_name())'
+BUILD_NO_CUDA=1 pixi install --locked
+pixi run --locked python -c 'import torch; from gsplat.cuda._backend import _C; assert torch.cuda.is_available() and _C is not None; print(torch.__version__, torch.cuda.get_device_name())'
 ```
 
-For a CUDA toolkit installed under a Conda prefix, set `CUDA_HOME` to that prefix. If its CUDA headers are under `targets/x86_64-linux/include`, also set `CPATH` to include that directory. The first build can take several minutes. Use `MAX_JOBS=2` if compilation runs out of host memory. The lock selects the PyTorch CUDA 12.6 wheels and the exact SatSplat affine gsplat commit. Editable installs expose Hydra configurations and the `sstrain` and `ssrender` entry points.
+`BUILD_NO_CUDA=1` defers extension compilation until the GPU environment is active. Pixi sets the CUDA and compiler paths for each command. The host supplies the NVIDIA driver.
 
 ## Run the smoke test
 
 Generate the CC0 synthetic scene or extract the release archive under `data/`, then train for 40 steps. This exercises initialization, image formation, camera updates, final GeoTIFF export and DSM evaluation. [Download test data](https://github.com/GDAOSU/SatSplat-PERS/releases/download/v1.0.0/SatSplatSynthetic.tar.gz) · [SHA256](https://github.com/GDAOSU/SatSplat-PERS/releases/download/v1.0.0/SatSplatSynthetic.tar.gz.sha256)
 
 ```bash
-uv run --no-sync python scripts/make_smoke_dataset.py data/SatSplatSynthetic
-uv run --no-sync sstrain data_root=data/SatSplatSynthetic site=SYNTHETIC \
+pixi run --locked python scripts/make_smoke_dataset.py data/SatSplatSynthetic
+pixi run --locked sstrain data_root=data/SatSplatSynthetic site=SYNTHETIC \
   max_steps=40 pipeline.schedule_cfg.camopt_start_iter=10 \
   pipeline.init_cfg.initializer.num_samples=5000 pipeline.strategy.cap_max=5000 \
   hydra.run.dir=runs/smoke
@@ -43,16 +37,16 @@ Obtain the benchmark inputs through their providers or your lab's authorized cop
 export SATSPLAT_DATA_ROOT=/path/to/SatSplatDataset_PERS
 (cd "$SATSPLAT_DATA_ROOT" && sha256sum --quiet -c SHA256SUMS)
 
-uv run --no-sync sstrain site=JAX_068 hydra.run.dir=runs/JAX_068
-uv run --no-sync ssrender runs/JAX_068/final_iter030000/state_dict.pth
+pixi run --locked sstrain site=JAX_068 hydra.run.dir=runs/JAX_068
+pixi run --locked ssrender runs/JAX_068/final_iter030000/state_dict.pth
 ```
 
-The PERS preset runs for 30,000 updates and samples one view per step. It starts shadow mapping at the first update and enables affine camera refinement after 3,000 steps. The seed, density control settings and paper loss weights are recorded in each run's resolved `config.yaml`. Use `sstrain --cfg job --resolve` to inspect the full setting. Put `dataset.preload=false` on the command line to read images on demand.
+The PERS preset runs for 30,000 updates and samples one view per step. It starts shadow mapping at the first update and enables affine camera refinement after 3,000 steps. The seed, density control settings and paper loss weights are recorded in each run's resolved `config.yaml`. Use `pixi run --locked sstrain --cfg job --resolve` to inspect the full setting. Put `dataset.preload=false` on the command line to read images on demand.
 
 The published tables report these sites. Use Hydra's multirun to run each scene in sequence.
 
 ```bash
-uv run --no-sync sstrain --multirun \
+pixi run --locked sstrain --multirun \
   site=JAX_004,JAX_068,JAX_168,JAX_214,JAX_251,JAX_260,JAX_280,OMA_203,OMA_212,OMA_315,IARPA_001,IARPA_002,IARPA_003
 ```
 

@@ -46,15 +46,28 @@ include = ["satsplat*"]
 [tool.setuptools.package-data]
 satsplat = ["config/*.yaml", "config/dataset/*.yaml", "config/pipeline/*.yaml", "config/pipeline/strategy/*.yaml", "config/pipeline/init_cfg/initializer/*.yaml"]
 
-[tool.uv]
-environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
-required-version = ">=0.11.4,<0.12"
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = [{ name = "linux-64-cuda-12-6", platform = "linux-64", cuda = "12.6" }]
+requires-pixi = ">=0.84.2"
 
-[tool.uv.sources]
-torch = { index = "pytorch-cu126" }
-torchvision = { index = "pytorch-cu126" }
+[tool.pixi.dependencies]
+python = "3.12.*"
+cuda-nvcc = "12.6.*"
+cuda-cudart-dev = "12.6.*"
+cuda-cccl = "12.6.*"
+gcc_linux-64 = "11.*"
+gxx_linux-64 = "11.*"
 
-[[tool.uv.index]]
-name = "pytorch-cu126"
-url = "https://download.pytorch.org/whl/cu126"
-explicit = true
+[tool.pixi.pypi-dependencies]
+satsplat-pers = { path = ".", editable = true }
+torch = { url = "https://download-r2.pytorch.org/whl/cu126/torch-2.9.1%2Bcu126-cp312-cp312-manylinux_2_28_x86_64.whl#sha256=67e9b1054f435d33af6fa67343f93d73dc2d37013623672d6ffb24ce39b666c2" }
+torchvision = { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.24.1%2Bcu126-cp312-cp312-manylinux_2_28_x86_64.whl#sha256=987243137be01e8c3e13bde20264c1c3fc22c570f607e19759d92bbc1364a75d" }
+
+[tool.pixi.activation.env]
+BUILD_NO_CUDA = "1"
+CUDA_HOME = "$CONDA_PREFIX"
+CPATH = "$CONDA_PREFIX/targets/x86_64-linux/include"
+PYTHONNOUSERSITE = "1"
+TORCH_EXTENSIONS_DIR = "$PIXI_PROJECT_ROOT/.pixi/torch_extensions"
+MAX_JOBS = "4"
