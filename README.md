@@ -99,4 +99,4 @@ Create a folder for your site with `images/`, `cameras.json`, `initialization/ds
 }
 ```
 
-The source code uses Apache-2.0. SatSplat builds on EOGS, 2D Gaussian Splatting, and gsplat. The benchmark data follow their providers' terms. [License](LICENSE) · [Notice](NOTICE) · [EOGS](https://github.com/mezzelfo/EOGS) · [gsplat](https://github.com/nerfstudio-project/gsplat)
+The source code uses Apache-2.0. SatSplat independently implements and extends the satellite photogrammetry formulation described in the EOGS paper by Savant Aira et al. (CVPR 2025). The implementation uses gsplat with the affine 2DGS rasterizer supplied by GDAOSU/gsplat. The benchmark data follow their providers' terms. [License](LICENSE) · [Notice](NOTICE) · [EOGS paper](https://arxiv.org/abs/2412.13047) · [gsplat](https://github.com/nerfstudio-project/gsplat)
