@@ -613,7 +613,7 @@ wheels = [
 
 [[package]]
 name = "satsplat-pers"
-version = "1.0.0"
+version = "1.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "affine", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
