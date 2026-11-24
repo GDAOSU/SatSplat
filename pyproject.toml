@@ -37,7 +37,7 @@ ssrender = "satsplat.entrypoint.render:main"
 
 [project.urls]
 Paper = "https://arxiv.org/abs/2606.28581"
-Homepage = "https://gdaosu.github.io/satsplat/"
+Homepage = "https://gdaosu.github.io/SatSplat/"
 Demo = "https://gdaosu.github.io/satsplat_html/"
 
 [tool.setuptools.packages.find]
