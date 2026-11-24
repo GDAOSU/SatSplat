@@ -63,6 +63,7 @@ class DSMInitializer(BaseInitializer):
         default_scale: Optional[float] = None,
         num_samples: int = 50000,
         sampling_method: Literal["uniform", "area_weighted"] = "area_weighted",
+        seed: Optional[int] = None,
         **kwargs,
     ):
         """
@@ -73,11 +74,13 @@ class DSMInitializer(BaseInitializer):
             default_scale: Scale factor relative to DSM resolution (default: 1.0)
             num_samples: Number of surface samples to draw from the DSM grid
             sampling_method: Strategy for selecting DSM pixels ("uniform" or "area_weighted")
+            seed: Random seed for surface sampling
         """
         super().__init__(**kwargs)
         self.default_scale = default_scale
         self.default_opacity = default_opacity
         self.num_samples = num_samples
+        self.seed = seed
         valid_sampling_methods = {"uniform", "area_weighted"}
         if sampling_method not in valid_sampling_methods:
             raise ValueError(
@@ -352,7 +355,7 @@ class DSMInitializer(BaseInitializer):
             normals=normal_map,
             ortho=ortho,
             num_samples=num_samples,
-            rng=None,
+            rng=np.random.default_rng(self.seed),
         )
 
         xyz = samples["points"]  # (N, 3)

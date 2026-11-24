@@ -22,9 +22,9 @@ from scipy.ndimage import map_coordinates
 EOGS_URL = "https://github.com/mezzelfo/EOGS/releases/download/dataset_v01/data.zip"
 EOGS_SHA256 = "b73c51d1d189a4d87d4c16258d4a9d2d53ab68776a91c5539f63094fef8a7d12"
 GEOMETRY_URL = (
-    "https://github.com/GDAOSU/SatSplat-PERS/releases/download/v1.0.1/SatSplatDataset_PERS_geometry.tar.gz"
+    "https://github.com/GDAOSU/SatSplat-PERS/releases/download/v1.0.3/SatSplatDataset_PERS_geometry.tar.gz"
 )
-GEOMETRY_SHA256 = "4a2454d430748488b01e0f4e715a5360b9f69f0c335f8128b3456a3924edabfe"
+GEOMETRY_SHA256 = "17c935c4c612a55e47101bd1abbd7f13853c665bb061ea9be451161d72c93046"
 
 
 def download(url, checksum, target):
@@ -92,17 +92,6 @@ class DfcFiles:
         else:
             with archive.open(member) as source, MemoryFile(source) as memory, memory.open() as image:
                 yield image
-
-
-def fit_camera_to_window(camera, window):
-    """Convert the fitted camera from PERS crop coordinates to the upstream crop."""
-    x, y, width, height = window
-    scale = np.array([camera["width"] / width, camera["height"] / height])
-    offset = scale - 1 - 2 * np.array([x / width, y / height])
-    model = camera["model"]
-    model["coef_"][:2] = (np.asarray(model["coef_"][:2]) * scale[:, None]).tolist()
-    model["intercept_"][:2] = (np.asarray(model["intercept_"][:2]) * scale + offset).tolist()
-    camera["width"], camera["height"] = width, height
 
 
 def read_dfc_image(dfc, camera, crop_offset):
@@ -188,7 +177,7 @@ def copy_truth(opener, site, target, crs, has_grid_text):
 
 
 def prepare_scene(site, target, camera_list, layout, geometry, eogs, dfc):
-    use_dfc = dfc is not None and not site.startswith("IARPA_")
+    use_dfc = not site.startswith("IARPA_")
     target.joinpath("images").mkdir(parents=True)
     target.joinpath("initialization", "orthos").mkdir(parents=True)
     target.joinpath("truth").mkdir(parents=True)
@@ -209,7 +198,6 @@ def prepare_scene(site, target, camera_list, layout, geometry, eogs, dfc):
                 mem.open() as image,
             ):
                 rgb = image.read()
-            fit_camera_to_window(camera, inputs["eogs_window"])
 
         if rgb.shape != (3, camera["height"], camera["width"]) or not np.isfinite(rgb).all():
             raise ValueError(f"Unexpected RGB dimensions or non-finite values in {site}/{filename}.")
@@ -228,7 +216,11 @@ def prepare_scene(site, target, camera_list, layout, geometry, eogs, dfc):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("destination", type=Path)
-    parser.add_argument("--sites", nargs="+", help="Scene names (defaults to all scenes available from EOGS)")
+    parser.add_argument(
+        "--sites",
+        nargs="+",
+        help="Scene names (defaults to IARPA scenes, or all sites with --dfc-source)",
+    )
     parser.add_argument(
         "--cache", type=Path, help="Download directory (defaults to a sibling SatSplat-downloads folder)"
     )
@@ -246,14 +238,12 @@ def main():
 
     with ExitStack() as stack:
         archive_path = args.geometry or download(
-            GEOMETRY_URL, GEOMETRY_SHA256, cache / "SatSplatDataset_PERS_geometry.tar.gz"
+            GEOMETRY_URL, GEOMETRY_SHA256, cache / "SatSplatDataset_PERS_geometry_v1.0.3.tar.gz"
         )
         geometry = stack.enter_context(tarfile.open(archive_path, "r:gz"))
         layout = json.load(geometry.extractfile("inputs.json"))
-        eogs_sites = [
-            site for site, views in layout.items() if all("eogs_window" in view for view in views.values())
-        ]
-        sites = list(dict.fromkeys(args.sites or eogs_sites))
+        eogs_sites = [site for site in layout if site.startswith("IARPA_")]
+        sites = list(dict.fromkeys(args.sites or (layout if args.dfc_source else eogs_sites)))
         missing = [site for site in sites if site not in layout]
         if missing:
             parser.error(f"Unknown scenes: {', '.join(missing)}")
@@ -262,7 +252,7 @@ def main():
                 f"Supply the official DFC2019 Track 3 input via --dfc-source for {', '.join(missing)}"
             )
         dfc = DfcFiles(args.dfc_source, stack) if args.dfc_source else None
-        needs_eogs = dfc is None or any(site.startswith("IARPA_") for site in sites)
+        needs_eogs = any(site in eogs_sites for site in sites)
         eogs = None
         if needs_eogs:
             eogs_path = args.eogs_zip or download(EOGS_URL, EOGS_SHA256, cache / "EOGS-dataset_v01.zip")

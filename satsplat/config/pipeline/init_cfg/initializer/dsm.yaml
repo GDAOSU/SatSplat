@@ -3,3 +3,4 @@ default_opacity: 0.9
 default_scale: null
 num_samples: 50_000
 sampling_method: area_weighted
+seed: ${seed}

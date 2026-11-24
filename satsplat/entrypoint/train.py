@@ -1,4 +1,5 @@
 import logging
+import random
 from pathlib import Path
 
 import hydra
@@ -26,6 +27,7 @@ def main(cfg: DictConfig):
     if not torch.cuda.is_available():
         raise RuntimeError("SatSplat training requires a CUDA-enabled NVIDIA GPU.")
 
+    random.seed(cfg.seed)
     torch.manual_seed(cfg.seed)
     np.random.seed(cfg.seed)
     logdir = Path(HydraConfig.get().runtime.output_dir)

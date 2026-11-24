@@ -31,22 +31,25 @@ pixi run --locked sstrain data_root=data/SatSplatSynthetic site=SYNTHETIC \
 
 ## Reproduce a benchmark site
 
-The setup script downloads the published SatSplat geometry and the EOGS benchmark inputs, then generates initialization orthophotos locally. It prepares seven scenes by default. Use `--dfc-source` with the official Track 3 files for the other DFC2019 scenes. [Dataset setup and source attribution](docs/dataset.md) · [Geometry archive](https://github.com/GDAOSU/SatSplat-PERS/releases/tag/v1.0.1)
+The setup script uses the official DFC2019 Track 3 imagery and reference rasters for all JAX and OMA scenes. The IARPA scenes come from the EOGS dataset release. It combines these inputs with the published SatSplat geometry and generates initialization orthophotos locally. [Dataset setup and source attribution](docs/dataset.md)
 
 ```bash
-pixi run --locked python scripts/fetch_dataset.py data/SatSplatDataset_PERS --sites JAX_068
-export SATSPLAT_DATA_ROOT="$PWD/data/SatSplatDataset_PERS"
-pixi run --locked sstrain site=JAX_068 hydra.run.dir=runs/JAX_068
+pixi run --locked python scripts/fetch_dataset.py data/SatSplatExample \
+  --dfc-source /path/to/Track3 --sites JAX_068
+export SATSPLAT_DATA_ROOT="$PWD/data/SatSplatExample"
+pixi run --locked sstrain site=JAX_068 seed=42 hydra.run.dir=runs/JAX_068
 pixi run --locked ssrender runs/JAX_068/final_iter030000/state_dict.pth
 ```
 
-The PERS preset runs for 30,000 updates and samples one view per step. It starts shadow mapping at the first update and enables affine camera refinement after 3,000 steps. The seed, density control settings and paper loss weights are recorded in each run's resolved `config.yaml`. Use `pixi run --locked sstrain --cfg job --resolve` to inspect the full setting. Put `dataset.preload=false` on the command line to read images on demand.
+The PERS preset runs for 30,000 updates and samples one view per step. It starts shadow mapping at the first update and enables affine camera refinement after 3,000 steps. The default seed is 42 and controls surface sampling, view selection and PyTorch randomness. GPU kernel reductions can introduce small numerical differences between runs. Density control settings, loss weights and the seed are recorded in each run's resolved `config.yaml`. Use `pixi run --locked sstrain --cfg job --resolve` to inspect the full setting. Put `dataset.preload=false` on the command line to read images on demand.
 
-The published tables report these sites. Use Hydra's multirun to run each scene in sequence.
+Prepare the 14 scenes, then use Hydra's multirun to train each scene in sequence.
 
 ```bash
-pixi run --locked sstrain --multirun \
-  site=JAX_004,JAX_068,JAX_168,JAX_214,JAX_251,JAX_260,JAX_280,OMA_203,OMA_212,OMA_315,IARPA_001,IARPA_002,IARPA_003
+pixi run --locked python scripts/fetch_dataset.py data/SatSplatDataset_PERS --dfc-source /path/to/Track3
+export SATSPLAT_DATA_ROOT="$PWD/data/SatSplatDataset_PERS"
+pixi run --locked sstrain --multirun seed=42 \
+  site=JAX_004,JAX_068,JAX_164,JAX_168,JAX_214,JAX_251,JAX_260,JAX_280,OMA_203,OMA_212,OMA_315,IARPA_001,IARPA_002,IARPA_003
 ```
 
 JAX_164 is also available in the prepared data. The repo starts from fitted cameras and stereo initialization rasters. Raw image preparation in the study used pansharpened imagery, RPC bundle adjustment, affine fitting and Ames Stereo Pipeline (ASP). Refer to Appendix B for the experimental setup. [Paper and supplement](https://arxiv.org/abs/2606.28581)
@@ -61,12 +64,25 @@ JAX_164 is also available in the prepared data. The repo starts from fitted came
 
 ### Validation
 
-All 14 benchmark scenes assembled by the public setup script passed a short GPU run through GeoTIFF export and evaluation with Pixi. The original prepared research data were used for the two full 30,000-step runs with seed 42 on an RTX 6000 Ada. The JAX_068 checkpoint reproduced the same rasters and metrics in the Pixi environment. All values below are registered MAE in meters. Paper values are from Tables S1 and S2. [Supplementary material](https://arxiv.org/abs/2606.28581)
+All 14 scenes were prepared with the public setup script, using the official DFC2019 MSI and reference files for JAX and OMA and the EOGS archive for IARPA. Each scene completed the 30,000-step PERS preset with seed 42 in the locked Pixi environment on an NVIDIA RTX 6000 Ada. All values below are registered MAE in meters. Paper values are from Tables S1 and S2. JAX_164 is an additional site. [Supplementary material](https://arxiv.org/abs/2606.28581)
 
 | Site | All classes | Paper | Buildings | Paper |
 | --- | ---: | ---: | ---: | ---: |
-| JAX_068 | 0.94 | 1.04 | 0.83 | 0.99 |
-| IARPA_001 | 1.48 | 1.63 | 0.83 | 0.88 |
+| JAX_004 | 1.39 | 1.46 | 0.80 | 0.82 |
+| JAX_068 | 0.95 | 1.04 | 0.85 | 0.99 |
+| JAX_164 | 3.05 | — | 3.75 | — |
+| JAX_168 | 0.95 | 0.94 | 0.84 | 0.87 |
+| JAX_214 | 1.35 | 1.49 | 0.98 | 1.19 |
+| JAX_251 | 1.11 | 1.07 | 0.81 | 0.79 |
+| JAX_260 | 1.59 | 1.48 | 0.88 | 1.01 |
+| JAX_280 | 1.73 | 1.85 | 0.69 | 0.83 |
+| OMA_203 | 1.05 | 1.10 | 0.53 | 0.59 |
+| OMA_212 | 0.58 | 0.63 | 1.83 | 2.10 |
+| OMA_315 | 1.21 | 1.19 | 1.60 | 1.42 |
+| IARPA_001 | 1.55 | 1.63 | 0.87 | 0.88 |
+| IARPA_002 | 1.94 | 2.09 | 0.84 | 1.02 |
+| IARPA_003 | 2.08 | 2.04 | 1.23 | 1.68 |
+| Mean (13 paper sites) | 1.35 | 1.39 | 0.98 | 1.09 |
 
 ### Custom prepared scenes
 
