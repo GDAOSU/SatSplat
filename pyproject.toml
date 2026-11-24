@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "satsplat-pers"
+version = "1.0.0"
+description = "SatSplat for geometrically accurate satellite surface reconstruction"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Shuang Song" }, { name = "Jiyong Kim" }, { name = "Rongjun Qin" }]
+dependencies = [
+    "affine",
+    "ephem",
+    "gsplat",
+    "hydra-core==1.3.2",
+    "matplotlib",
+    "meshio",
+    "ninja",
+    "numba",
+    "numpy",
+    "pyproj",
+    "rasterio",
+    "scipy",
+    "tensorboard",
+    "torch==2.9.1",
+    "torchmetrics",
+    "torchvision==0.24.1",
+    "tqdm",
+]
+
+[project.scripts]
+sstrain = "satsplat.entrypoint.train:main"
+ssrender = "satsplat.entrypoint.render:main"
+
+[project.urls]
+Paper = "https://arxiv.org/abs/2606.28581"
+Homepage = "https://gdaosu.github.io/satsplat/"
+Demo = "https://gdaosu.github.io/satsplat_html/"
+
+[tool.setuptools.packages.find]
+include = ["satsplat*"]
+
+[tool.setuptools.package-data]
+satsplat = ["config/*.yaml", "config/dataset/*.yaml", "config/pipeline/*.yaml", "config/pipeline/strategy/*.yaml", "config/pipeline/init_cfg/initializer/*.yaml"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+required-version = ">=0.11.4,<0.12"
+
+[tool.uv.sources]
+gsplat = { git = "https://github.com/GDAOSU/gsplat.git", rev = "38a65f9ec4320d9c8f7e1cad5c81017bfb682b45" }
+torch = { index = "pytorch-cu126" }
+torchvision = { index = "pytorch-cu126" }
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true

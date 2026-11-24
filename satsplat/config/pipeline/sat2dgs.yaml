@@ -1,0 +1,56 @@
+defaults:
+  - strategy: mcmc
+  - init_cfg/initializer: dsm
+_target_: satsplat.pipeline.Sat2DGS
+
+init_cfg:
+  init_ambient: 0.1
+
+lr_cfg:
+  sparse_grad: false
+  visible_adam: false
+  means_lr: 0.075
+  opacities_lr: 0.1
+  scales_lr: 0.001
+  quats_lr: 0.001
+  color_lr: 0.0025
+  feature_lr: 0.00025
+  illumination_lr: 0.01
+  color_correction_lr: 0.001
+  camopt_lr: 0.0001
+
+schedule_cfg:
+  shadowmapping_start_iter: 0
+  camopt_start_iter: 3000
+  L_sun_resample_start_iter: .inf
+  L_new_resample_start_iter: .inf
+  L_accumulated_opacity_start_iter: .inf
+  L_normal_start_iter: 0
+  L_distloss_start_iter: 0
+
+loss_weights:
+  image_l1: 0.8
+  image_weighted_l1: 0.0
+  image_ssim: 0.2
+  opacity_sparsity: 0.0
+  opacity_entropy: 0.01
+  shadow_translucency: 0.01
+  accumulated_opacity: 0.0
+  sun_depth_resample: 0.0
+  sun_color_resample: 0.0
+  new_depth_resample: 0.0
+  new_color_resample: 0.0
+  normal: 0.05
+  distloss: 0.05
+
+render_cfg:
+  depth_func: invert_z
+  depth_mode: ED
+  random_bg: true
+  sun_camera_scale: 1.5
+  new_camera_scale: 1.5
+  new_camera_extent: 0.01
+  shadow_density: 0.4
+  visibility_threshold: 0.01
+  radius_clip: 0.3
+  eps2d: 0.0

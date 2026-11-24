@@ -1,0 +1,19 @@
+defaults:
+  - dataset: benchmark
+  - pipeline: sat2dgs
+  - _self_
+
+site: JAX_068
+data_root: ${oc.env:SATSPLAT_DATA_ROOT,./data/SatSplatDataset_PERS}
+output_dir: ./runs
+max_steps: 30000
+seed: 42
+evaluate_every: 1000
+log_images_every: 1000
+save_checkpoint_every: 5000
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${output_dir}/${site}_${now:%Y%m%d-%H%M%S-%f}

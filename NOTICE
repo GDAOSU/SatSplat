@@ -1,0 +1,7 @@
+SatSplat
+Copyright 2026 the SatSplat authors
+
+The SatSplat research code builds on EOGS (Luca Savant Aira, Gabriele
+Facciolo, and Thibaud Ehret) and uses the open-source gsplat library.
+The affine 2DGS rasterizer is supplied by GDAOSU/gsplat, installed separately.
+Benchmark imagery and reference rasters retain their original terms.

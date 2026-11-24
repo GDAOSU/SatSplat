@@ -1,0 +1,4 @@
+_target_: satsplat.initialize.PlyInitializer
+default_opacity: 0.5
+default_scale: null
+color_mode: "auto"  # "auto", "rgb", "sh", "white"
