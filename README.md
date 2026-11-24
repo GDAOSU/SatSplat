@@ -40,7 +40,7 @@ pixi run --locked sstrain site=JAX_068 hydra.run.dir=runs/JAX_068
 pixi run --locked ssrender runs/JAX_068/final_iter030000/state_dict.pth
 ```
 
-The PERS preset runs for 30,000 updates and samples one view per step. It starts shadow mapping at the first update and enables affine camera refinement after 3,000 steps. The seed, density control settings and paper loss weights are recorded in each run's resolved `config.yaml`. Use `sstrain --cfg job --resolve` to inspect the full setting. Put `dataset.preload=false` on the command line to read images on demand.
+The PERS preset runs for 30,000 updates and samples one view per step. It starts shadow mapping at the first update and enables affine camera refinement after 3,000 steps. The seed, density control settings and paper loss weights are recorded in each run's resolved `config.yaml`. Use `pixi run --locked sstrain --cfg job --resolve` to inspect the full setting. Put `dataset.preload=false` on the command line to read images on demand.
 
 The published tables report these sites. Use Hydra's multirun to run each scene in sequence.
 
@@ -61,7 +61,7 @@ JAX_164 is also available in the prepared data. The repo starts from fitted came
 
 ### Validation
 
-All 14 prepared scenes passed a short GPU run through GeoTIFF export and evaluation. Two scenes completed the full 30,000-step preset with seed 42 on an RTX 6000 Ada. All values below are registered MAE in meters. Paper values are from Tables S1 and S2. [Supplementary material](https://arxiv.org/abs/2606.28581)
+All 14 benchmark scenes assembled by the public setup script passed a short GPU run through GeoTIFF export and evaluation with Pixi. The original prepared research data were used for the two full 30,000-step runs with seed 42 on an RTX 6000 Ada. The JAX_068 checkpoint reproduced the same rasters and metrics in the Pixi environment. All values below are registered MAE in meters. Paper values are from Tables S1 and S2. [Supplementary material](https://arxiv.org/abs/2606.28581)
 
 | Site | All classes | Paper | Buildings | Paper |
 | --- | ---: | ---: | ---: | ---: |

@@ -56,7 +56,7 @@ Lab-prepared copies include `SHA256SUMS`. Run `sha256sum -c SHA256SUMS` from the
 The JAX and OMA scenes come from the original DFC2019 PERS data. The IARPA2016 scenes use the later PERS inputs with matching fitted cameras and stereo initialization from the wrapped dataset. The preparation script collects the files consumed by training and evaluation. Researchers with access to both processed source trees can run it with Python 3.12.
 
 ```bash
-python3.12 scripts/package_dataset.py /path/to/original/SatSplatDataset_PERS \
+pixi run --locked python scripts/package_dataset.py /path/to/original/SatSplatDataset_PERS \
   /path/to/clean/SatSplatDataset_PERS --iarpa-source /path/to/wrapped_dataset/satsplat
 ```
 
