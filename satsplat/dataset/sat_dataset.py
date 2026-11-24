@@ -499,6 +499,8 @@ class SatDataset(torch.utils.data.Dataset):
         else:
             file_path = self.img_dir / self.img_list[idx]
             img = self.load_img(file_path)
+            if img.shape[:2] != self.img_shapes[idx]:
+                raise ValueError(f"Image dimensions do not match camera metadata for {file_path.name}.")
             img = torch.from_numpy(img).to(self.device)
 
         sample = dict(

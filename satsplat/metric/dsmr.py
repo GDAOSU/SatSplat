@@ -67,6 +67,9 @@ def evaluate(reference, predicted, classes=None):
     """Estimate an integer XY shift and a constant height offset, then score the overlap."""
     if reference.shape != predicted.shape:
         raise ValueError("Reference and predicted DSMs must share a grid.")
+    if classes is not None:
+        # The PERS benchmark error maps mask water and elevated road/bridge pixels.
+        reference = np.where(np.isin(classes, (9, 17)), np.nan, reference)
     dx, dy = find_translation(reference, predicted)
     ref, pred = overlap(reference.shape, dx, dy)
     delta = reference[ref] - predicted[pred]
@@ -75,7 +78,7 @@ def evaluate(reference, predicted, classes=None):
     registered = np.full(reference.shape, np.nan, dtype=np.float32)
     if dz is not None:
         registered[ref] = predicted[pred] + dz
-    error = registered - reference
+    error = np.clip(registered - reference, -10.0, 10.0)
     absolute_error = np.abs(error)
     valid = np.isfinite(error)
 

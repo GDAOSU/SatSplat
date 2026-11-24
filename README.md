@@ -14,6 +14,7 @@ From the repository root, set `CUDA_HOME` to your CUDA 12.6 installation, then i
 export CUDA_HOME=/usr/local/cuda-12.6
 export PATH="$CUDA_HOME/bin:$PATH"
 export MAX_JOBS=4
+export TORCH_EXTENSIONS_DIR="$PWD/.venv/torch_extensions"
 nvcc --version
 
 uv python install 3.12
@@ -25,7 +26,7 @@ For a CUDA toolkit installed under a Conda prefix, set `CUDA_HOME` to that prefi
 
 ## Run the smoke test
 
-Generate the CC0 synthetic scene and train for 40 steps. This exercises initialization, image formation, camera updates, final GeoTIFF export and DSM evaluation.
+Generate the CC0 synthetic scene or extract the release archive under `data/`, then train for 40 steps. This exercises initialization, image formation, camera updates, final GeoTIFF export and DSM evaluation. [Download test data](https://github.com/GDAOSU/SatSplat-PERS/releases/download/v1.0.0/SatSplatSynthetic.tar.gz) · [SHA256](https://github.com/GDAOSU/SatSplat-PERS/releases/download/v1.0.0/SatSplatSynthetic.tar.gz.sha256)
 
 ```bash
 uv run --no-sync python scripts/make_smoke_dataset.py data/SatSplatSynthetic
@@ -62,7 +63,7 @@ JAX_164 is also available in the prepared data. The repo starts from fitted came
 
 - `model.ply`, `state_dict.pth`, and `aux_params.yaml` contain the trained splats and learned appearance and camera parameters.
 - `dsm.tif` stores predicted heights in meters and `ortho.tif` stores RGB albedo on the same UTM grid. The final checkpoint also contains `dsm_registered.tif`, `dsm_error.tif`, and `metrics.json`. Training logs and TensorBoard events live in the run directory.
-- Evaluation renders onto the reference DSM grid, searches for a horizontal translation by multiscale normalized correlation and fits a constant vertical shift by the median residual. MAE uses valid overlap pixels. Building MAE uses reference class 6 on the same registered grid. `metrics.json` records the shifts and valid overlap count.
+- Evaluation renders onto the reference DSM grid, searches for a horizontal translation by multiscale normalized correlation and fits a constant vertical shift by the median residual. Benchmark MAE excludes water and elevated road or bridge pixels (classes 9 and 17) and caps absolute residuals at 10 m. Building MAE uses class 6 on the same registered grid. `metrics.json` records the shifts and valid overlap count.
 - `ssrender` re-exports from a trained checkpoint. Use `--data-root` if the benchmark directory moved, or `--output` to select an export directory. Intermediate checkpoints are model snapshots for rendering.
 - Initial splat scales use SciPy's KD-tree search for the three closest neighbors. The updated CUDA/PyTorch stack, registration implementation, and sampling can shift metrics relative to the paper.
 
