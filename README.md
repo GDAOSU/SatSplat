@@ -12,10 +12,9 @@ From the repository root, set `CUDA_HOME` to your CUDA 12.6 installation, then i
 
 ```bash
 export CUDA_HOME=/usr/local/cuda-12.6
-export PATH="$CUDA_HOME/bin:$PATH"
 export MAX_JOBS=4
 export TORCH_EXTENSIONS_DIR="$PWD/.venv/torch_extensions"
-nvcc --version
+"$CUDA_HOME/bin/nvcc" --version
 
 uv python install 3.12
 BUILD_NO_CUDA=1 uv sync --locked
@@ -66,6 +65,15 @@ JAX_164 is also available in the prepared data. The repo starts from fitted came
 - Evaluation renders onto the reference DSM grid, searches for a horizontal translation by multiscale normalized correlation and fits a constant vertical shift by the median residual. Benchmark MAE excludes water and elevated road or bridge pixels (classes 9 and 17) and caps absolute residuals at 10 m. Building MAE uses class 6 on the same registered grid. `metrics.json` records the shifts and valid overlap count.
 - `ssrender` re-exports from a trained checkpoint. Use `--data-root` if the benchmark directory moved, or `--output` to select an export directory. Intermediate checkpoints are model snapshots for rendering.
 - Initial splat scales use SciPy's KD-tree search for the three closest neighbors. The updated CUDA/PyTorch stack, registration implementation, and sampling can shift metrics relative to the paper.
+
+### Validation
+
+All 14 prepared scenes passed a short GPU run through GeoTIFF export and evaluation. Two scenes completed the full 30,000-step preset with seed 42 on an RTX 6000 Ada. All values below are registered MAE in meters. Paper values are from Tables S1 and S2. [Supplementary material](https://arxiv.org/abs/2606.28581)
+
+| Site | All classes | Paper | Buildings | Paper |
+| --- | ---: | ---: | ---: | ---: |
+| JAX_068 | 0.94 | 1.04 | 0.83 | 0.99 |
+| IARPA_001 | 1.48 | 1.63 | 0.83 | 0.88 |
 
 ### Custom prepared scenes
 
