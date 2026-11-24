@@ -84,11 +84,19 @@ body {
 
 .hero-figure img,
 .result-figure img,
-.paired-figure img {
+.paired-figure img,
+.video-figure video {
   width: 100%;
   border-radius: 8px;
   border: 1px solid #d9e0e8;
   box-shadow: 0 10px 30px rgba(18, 31, 46, 0.08);
+}
+
+.video-figure video {
+  display: block;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: #18202a;
 }
 
 .caption {
