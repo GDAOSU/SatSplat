@@ -2,7 +2,7 @@
 
 SatSplat reconstructs georeferenced digital surface models (DSMs) and orthophotos from multi-date satellite imagery. This repository accompanies the PERS paper by Shuang Song, Jiyong Kim, and Rongjun Qin. It implements affine 2D Gaussian splatting, online camera refinement, shadow-aware appearance, and surface-area-weighted initialization from a coarse stereo DSM.
 
-[Project page](https://gdaosu.github.io/SatSplat/) · [Interactive demo](https://gdaosu.github.io/satsplat_html/) · [PERS paper](https://www.ingentaconnect.com/content/asprs/pers/pre-prints/content-26-00025r2) · [arXiv and supplementary material](https://arxiv.org/abs/2606.28581)
+[Project page](https://gdaosu.github.io/SatSplat/) · [Interactive demo](https://gdaosu.github.io/satsplat_html/) · [PERS paper](https://www.ingentaconnect.com/content/asprs/pers/pre-prints/content-26-00025r2) · [arXiv and supplementary material](https://arxiv.org/abs/2606.28581) · [DOI](https://doi.org/10.14358/PERS.26-00025R2)
 
 ## Install
 
@@ -91,11 +91,11 @@ Create a folder for your site with `images/`, `cameras.json`, `initialization/ds
 
 ```bibtex
 @article{song2026satsplat,
-  title   = {SatSplat: Geometrically Accurate Gaussian Splatting for Satellite Imagery},
+  title   = {{SatSplat}: Geometrically Accurate Gaussian Splatting for Satellite Imagery},
   author  = {Song, Shuang and Kim, Jiyong and Qin, Rongjun},
-  journal = {Photogrammetric Engineering & Remote Sensing},
+  journal = {Photogrammetric Engineering \& Remote Sensing},
   year    = {2026},
-  doi     = {10.14358/pers.26-00025r2}
+  doi     = {10.14358/PERS.26-00025R2}
 }
 ```
 

@@ -2,6 +2,8 @@ cff-version: 1.2.0
 message: "If you use SatSplat, please cite the PERS article."
 title: SatSplat
 type: software
+repository-code: https://github.com/GDAOSU/SatSplat
+url: https://gdaosu.github.io/SatSplat/
 authors:
   - family-names: Song
     given-names: Shuang
@@ -21,4 +23,5 @@ preferred-citation:
       given-names: Rongjun
   journal: Photogrammetric Engineering & Remote Sensing
   year: 2026
-  doi: 10.14358/pers.26-00025r2
+  doi: 10.14358/PERS.26-00025R2
+  url: https://www.ingentaconnect.com/content/asprs/pers/pre-prints/content-26-00025r2

@@ -4,16 +4,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="SatSplat: Geometrically-Accurate Gaussian Splatting for Satellite Imagery">
+  <meta name="description" content="SatSplat reconstructs accurate digital surface models from multi-date satellite imagery using affine 2D Gaussian splatting, online camera refinement, and shadow-aware rendering.">
   <meta name="keywords" content="SatSplat, satellite photogrammetry, Gaussian Splatting, 2DGS, digital surface model, remote sensing">
-  <meta property="og:title" content="SatSplat: Geometrically-Accurate Gaussian Splatting for Satellite Imagery">
+  <meta property="og:title" content="SatSplat: Geometrically Accurate Gaussian Splatting for Satellite Imagery">
   <meta property="og:description" content="SatSplat adapts 2D Gaussian Splatting to affine satellite cameras for accurate and efficient digital surface modeling from multi-date imagery.">
   <meta property="og:image" content="https://gdaosu.github.io/SatSplat/static/images/teaser.jpg">
   <meta property="og:url" content="https://gdaosu.github.io/SatSplat/">
   <link rel="canonical" href="https://gdaosu.github.io/SatSplat/">
   <meta property="og:type" content="website">
+  <meta name="citation_title" content="SatSplat: Geometrically Accurate Gaussian Splatting for Satellite Imagery">
+  <meta name="citation_author" content="Song, Shuang">
+  <meta name="citation_author" content="Kim, Jiyong">
+  <meta name="citation_author" content="Qin, Rongjun">
+  <meta name="citation_journal_title" content="Photogrammetric Engineering &amp; Remote Sensing">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_doi" content="10.14358/PERS.26-00025R2">
 
-  <title>SatSplat: Geometrically-Accurate Gaussian Splatting for Satellite Imagery</title>
+  <title>SatSplat: Geometrically Accurate Gaussian Splatting for Satellite Imagery</title>
 
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
   <link rel="stylesheet" href="static/css/bulma.min.css">
@@ -29,7 +36,7 @@
         <div class="columns is-centered">
           <div class="column has-text-centered">
             <h1 class="title is-1 publication-title">
-              SatSplat: Geometrically-Accurate Gaussian Splatting for Satellite Imagery
+              SatSplat: Geometrically Accurate Gaussian Splatting for Satellite Imagery
             </h1>
 
             <div class="is-size-5 publication-authors">
@@ -40,6 +47,7 @@
 
             <div class="is-size-6 has-text-centered mt-2">
               The Ohio State University<br>
+              Geospatial Data Analytics Laboratory<br>
               <sup>*</sup> Equal contribution &nbsp; <sup>&dagger;</sup> Corresponding author
             </div>
 
@@ -53,21 +61,21 @@
             </div>
 
             <div class="is-size-5 mt-4">
-              <a href="https://my.asprs.org/PERS/PERS/Default.aspx" target="_blank" rel="noopener">
+              <a href="https://www.ingentaconnect.com/content/asprs/pers/pre-prints/content-26-00025r2" target="_blank" rel="noopener">
                 Photogrammetric Engineering &amp; Remote Sensing
-              </a>
+              </a> (2026)
             </div>
 
             <div class="publication-links mt-5">
               <span class="link-block">
-                <a href="#" onclick="return false;" class="button is-normal is-rounded is-article" aria-disabled="true">
+                <a href="https://www.ingentaconnect.com/content/asprs/pers/pre-prints/content-26-00025r2" class="button is-normal is-rounded is-article" target="_blank" rel="noopener">
                   <span class="icon"><i class="fa-regular fa-file-lines"></i></span>
-                  <span>Article coming soon</span>
+                  <span>Paper (Ingenta)</span>
                 </a>
               </span>
 
               <span class="link-block">
-                <a href="https://arxiv.org/" class="button is-normal is-rounded is-arxiv" target="_blank" rel="noopener">
+                <a href="https://arxiv.org/abs/2606.28581" class="button is-normal is-rounded is-arxiv" target="_blank" rel="noopener">
                   <span class="icon"><i class="ai ai-arxiv"></i></span>
                   <span>arXiv</span>
                 </a>
@@ -76,7 +84,21 @@
               <span class="link-block">
                 <a href="https://github.com/GDAOSU/SatSplat" class="button is-normal is-rounded is-code" target="_blank" rel="noopener">
                   <span class="icon"><i class="fa-brands fa-github"></i></span>
-                  <span>Code</span>
+                  <span>GitHub</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="https://gdaosu.github.io/satsplat_html/" class="button is-normal is-rounded is-demo" target="_blank" rel="noopener">
+                  <span class="icon"><i class="fa-solid fa-cube"></i></span>
+                  <span>Live Demo</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="https://doi.org/10.14358/PERS.26-00025R2" class="button is-normal is-rounded is-article" target="_blank" rel="noopener">
+                  <span class="icon"><i class="ai ai-doi"></i></span>
+                  <span>DOI</span>
                 </a>
               </span>
             </div>
@@ -100,13 +122,13 @@
           <h2 class="title is-3">Abstract</h2>
           <div class="content has-text-justified">
             <p>
-              High-resolution satellite imagery demands 3D reconstruction methods that deliver both speed and geometric accuracy. Recent adaptations of 3D Gaussian Splatting (3DGS) to satellite imagery demonstrate strong efficiency, but reconstruction quality often degrades under diverse illumination across multi-date, high-altitude acquisitions with small intersection angles, limiting applicability to remote sensing and vision tasks.
+              High-resolution satellite imagery demands three-dimensional reconstruction methods that deliver both speed and geometric accuracy. Recent adaptations of 3D Gaussian splatting (3DGS) offer efficient reconstruction, but diverse illumination across multi-date acquisitions and small intersection angles can reduce geometric accuracy.
             </p>
             <p>
-              We present <strong>SatSplat</strong>, the first framework to adapt 2D Gaussian Splatting (2DGS) to satellite photogrammetry, with online camera adjustment. We approximate satellite cameras with an affine model and learn a minimal delta parameterization for in-splat camera refinement from dense observations. To handle time-varying shadows and illumination changes, we integrate geometric shadow mapping and per-camera color correction during training.
+              We present <strong>SatSplat</strong>, a framework that adapts 2D Gaussian splatting (2DGS) to satellite photogrammetry with online camera adjustment. SatSplat represents scene surfaces using oriented planar Gaussians, refines affine cameras from dense photometric observations, and models time-varying shadows and illumination through geometric shadow mapping and per-camera color correction.
             </p>
             <p>
-              Across the evaluated DFC2019 and IARPA2016 benchmark sites, SatSplat achieves strong geometric accuracy while significantly outperforming prior 3DGS-based baselines. On our processed DFC2019 benchmark, SatSplat reduces mean absolute error by 11.93% and peak video memory by 31% relative to the previous state of the art.
+              Experiments across DFC2019 and IARPA2016 demonstrate strong geometric accuracy and practical computational efficiency. On the processed DFC2019 benchmark, SatSplat reduces mean absolute error by <strong>11.93%</strong> and peak video memory by <strong>31%</strong> relative to the previous state of the art, enabling accurate large-scale digital surface modeling.
             </p>
           </div>
         </div>
@@ -116,9 +138,33 @@
 
   <section class="section">
     <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Method</h2>
+      <div class="columns is-multiline is-variable is-5 method-grid">
+        <div class="column is-half">
+          <h3 class="title is-5">Affine 2D Gaussian Splatting</h3>
+          <p>Oriented planar Gaussians model the terrain surface with explicit normals. An analytic affine ray-splat intersection and CUDA rasterizer support efficient optimization and geometrically consistent depth rendering.</p>
+        </div>
+        <div class="column is-half">
+          <h3 class="title is-5">Online Camera Refinement</h3>
+          <p>A compact delta-affine parameterization refines the initial satellite camera estimates during training. Dense image observations guide the adjustments, improving alignment when the initial camera geometry is imperfect.</p>
+        </div>
+        <div class="column is-half">
+          <h3 class="title is-5">Shadow-aware Appearance</h3>
+          <p>Sun directions from acquisition metadata drive geometric shadow mapping. Per-image affine color correction and ambient illumination model accommodate radiometric variation across dates while learning surface albedo.</p>
+        </div>
+        <div class="column is-half">
+          <h3 class="title is-5">Geometry-aware Initialization</h3>
+          <p>A coarse stereo DSM and orthophoto initialize the Gaussian positions, colors, and normals. Surface-area-weighted sampling allocates more primitives to steep structures, including building facades.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered">Results</h2>
       <p class="subtitle has-text-centered">
-        Dataset-level average MAE<sub>reg</sub> in meters. Lower is better.
+        Registered mean absolute elevation error (MAE<sub>reg</sub>, in meters) on DFC2019 (JAX and OMA) and IARPA2016.
       </p>
 
       <div class="metric-strip">
@@ -159,16 +205,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>ASP</td><td>2.09</td><td>1.00</td><td>2.38</td><td>1.88</td><td>2.12</td><td>1.90</td><td>2</td></tr>
+            <tr><td>ASP</td><td>2.09</td><td><u>1.00</u></td><td>2.38</td><td>1.88</td><td>2.12</td><td>1.90</td><td><strong>2</strong></td></tr>
             <tr><td>s2p</td><td>2.98</td><td>1.30</td><td>3.28</td><td>3.45</td><td>2.13</td><td>3.20</td><td>20</td></tr>
             <tr><td>SAT-NGP</td><td>3.01</td><td>2.01</td><td>2.37</td><td>3.40</td><td>3.99</td><td>2.70</td><td>23</td></tr>
-            <tr><td>EOGS</td><td>1.50</td><td>1.47</td><td><strong>1.86</strong></td><td>1.25</td><td>2.64</td><td>1.37</td><td>3</td></tr>
-            <tr><td>Skyfall-GS (w/o IDU)</td><td>1.78</td><td>1.22</td><td>2.55</td><td>1.45</td><td>1.69</td><td>2.17</td><td>30</td></tr>
+            <tr><td>EOGS</td><td><u>1.50</u></td><td>1.47</td><td><strong>1.86</strong></td><td><u>1.25</u></td><td>2.64</td><td><u>1.37</u></td><td><u>3</u></td></tr>
+            <tr><td>Skyfall-GS (w/o IDU)</td><td>1.78</td><td>1.22</td><td>2.55</td><td>1.45</td><td><u>1.69</u></td><td>2.17</td><td>30</td></tr>
             <tr><td>Skyfall-GS (w/ IDU)</td><td>1.88</td><td>1.40</td><td>2.60</td><td>1.58</td><td>1.81</td><td>2.05</td><td>120</td></tr>
-            <tr class="ours-row"><td>SatSplat (Ours)</td><td>1.33</td><td>0.97</td><td>1.92</td><td>0.93</td><td>1.37</td><td>1.19</td><td>14</td></tr>
+            <tr class="ours-row"><th scope="row">SatSplat (Ours)</th><td><strong>1.33</strong></td><td><strong>0.97</strong></td><td><u>1.92</u></td><td><strong>0.93</strong></td><td><strong>1.37</strong></td><td><strong>1.19</strong></td><td>14</td></tr>
           </tbody>
         </table>
       </div>
+      <p class="caption">Results from Table 1 of the paper. Lower is better. The best and second-best results in each column are <strong>bold</strong> and <u>underlined</u>, respectively.</p>
 
       <h3 class="title is-4 has-text-centered mt-6">Qualitative Comparison</h3>
       <p class="subtitle has-text-centered">
@@ -299,7 +346,7 @@
       <figure class="result-figure mt-5">
         <img src="static/images/camera_robustness.png" alt="Camera optimization tolerance analysis">
         <figcaption class="caption">
-          Online affine camera optimization improves robustness when initial camera poses are perturbed.
+              Online affine camera optimization improves robustness when initial camera poses are perturbed.
         </figcaption>
       </figure>
     </div>
@@ -307,14 +354,33 @@
 
   <section class="section hero is-light section-divider">
     <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Code and Reproducibility</h2>
+      <div class="content">
+        <p>The public implementation includes a locked Pixi environment, training and rendering entry points, and preparation scripts for all 13 benchmark scenes. SatSplat exports georeferenced DSMs and orthophotos, as well as trained Gaussian models and registered DSM evaluation metrics.</p>
+        <p class="has-text-centered">
+          <a href="https://github.com/GDAOSU/SatSplat#install" target="_blank" rel="noopener">Installation and usage</a> &middot;
+          <a href="https://github.com/GDAOSU/SatSplat/blob/main/docs/dataset.md" target="_blank" rel="noopener">Dataset preparation</a> &middot;
+          <a href="https://github.com/GDAOSU/SatSplat#validation" target="_blank" rel="noopener">Reproduction results</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-divider" id="citation">
+    <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered">Citation</h2>
+      <p class="has-text-centered mb-4">If you use SatSplat in your research, please cite the PERS article.</p>
       <pre><code>@article{song2026satsplat,
-  title   = {SatSplat: Geometrically-Accurate Gaussian Splatting for Satellite Imagery},
+  title   = {{SatSplat}: Geometrically Accurate Gaussian Splatting for Satellite Imagery},
   author  = {Song, Shuang and Kim, Jiyong and Qin, Rongjun},
-  journal = {Photogrammetric Engineering &amp; Remote Sensing},
+  journal = {Photogrammetric Engineering \&amp; Remote Sensing},
   year    = {2026},
-  note    = {Coming soon}
+  doi     = {10.14358/PERS.26-00025R2}
 }</code></pre>
+      <p class="has-text-centered mt-4">
+        <a href="static/satsplat.bib" download="satsplat.bib">Download BibTeX</a> &middot;
+        <a href="https://doi.org/10.14358/PERS.26-00025R2" target="_blank" rel="noopener">10.14358/PERS.26-00025R2</a>
+      </p>
     </div>
   </section>
 

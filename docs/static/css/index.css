@@ -45,8 +45,7 @@ body {
 .button.is-article {
   background: #eef1f4;
   border-color: #d8dee6;
-  color: #536171;
-  cursor: default;
+  color: #18202a;
 }
 
 .button.is-arxiv {
@@ -59,6 +58,24 @@ body {
   background: #1e2a36;
   border-color: #1e2a36;
   color: #fff;
+}
+
+.button.is-demo {
+  background: #0f5d6e;
+  border-color: #0f5d6e;
+  color: #fff;
+}
+
+.publication-links .button:hover {
+  box-shadow: 0 3px 10px rgba(18, 31, 46, 0.16);
+}
+
+.method-grid .title {
+  margin-bottom: 0.65rem;
+}
+
+.method-grid p {
+  line-height: 1.6;
 }
 
 .hero-figure {
@@ -121,9 +138,8 @@ body {
   white-space: nowrap;
 }
 
-.ours-row {
+.table.is-striped tbody tr.ours-row {
   background: #eef8f7;
-  font-weight: 700;
 }
 
 .qualitative-wrap {
@@ -197,6 +213,19 @@ body {
   }
 
   .publication-title {
-    font-size: 2rem !important;
+    font-size: 1.75rem !important;
+  }
+
+  .institution-logos {
+    gap: 1rem;
+  }
+
+  .institution-logos img {
+    max-width: 210px;
+    max-height: 46px;
+  }
+
+  .institution-logos .lab-logo {
+    max-height: 48px;
   }
 }
