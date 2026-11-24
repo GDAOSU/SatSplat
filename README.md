@@ -19,7 +19,7 @@ pixi run --locked python -c 'import torch; from gsplat.cuda._backend import _C; 
 
 ## Run the smoke test
 
-Generate the CC0 synthetic scene or extract the release archive under `data/`, then train for 40 steps. This exercises initialization, image formation, camera updates, final GeoTIFF export and DSM evaluation. [Download test data](https://github.com/GDAOSU/SatSplat-PERS/releases/download/v1.0.0/SatSplatSynthetic.tar.gz) · [SHA256](https://github.com/GDAOSU/SatSplat-PERS/releases/download/v1.0.0/SatSplatSynthetic.tar.gz.sha256)
+Generate the CC0 synthetic scene or extract the release archive under `data/`, then train for 40 steps. This exercises initialization, image formation, camera updates, final GeoTIFF export and DSM evaluation. [Download test data](https://github.com/GDAOSU/SatSplat/releases/download/v1.0.0/SatSplatSynthetic.tar.gz) · [SHA256](https://github.com/GDAOSU/SatSplat/releases/download/v1.0.0/SatSplatSynthetic.tar.gz.sha256)
 
 ```bash
 pixi run --locked python scripts/make_smoke_dataset.py data/SatSplatSynthetic

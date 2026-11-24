@@ -910,7 +910,7 @@ packages:
   size: 119208
   timestamp: 1792758382821
 - pypi: ./
-  name: satsplat-pers
+  name: satsplat
   requires_dist:
   - affine
   - ephem

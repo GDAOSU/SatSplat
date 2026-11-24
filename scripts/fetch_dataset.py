@@ -22,7 +22,7 @@ from scipy.ndimage import map_coordinates
 EOGS_URL = "https://github.com/mezzelfo/EOGS/releases/download/dataset_v01/data.zip"
 EOGS_SHA256 = "b73c51d1d189a4d87d4c16258d4a9d2d53ab68776a91c5539f63094fef8a7d12"
 GEOMETRY_URL = (
-    "https://github.com/GDAOSU/SatSplat-PERS/releases/download/v1.0.4/SatSplatDataset_PERS_geometry.tar.gz"
+    "https://github.com/GDAOSU/SatSplat/releases/download/v1.0.0/SatSplatDataset_PERS_geometry.tar.gz"
 )
 GEOMETRY_SHA256 = "d3ed8368a260bdce0fc286d2d2600af114a48d3088152bd41eefb159a507b72f"
 
@@ -238,7 +238,7 @@ def main():
 
     with ExitStack() as stack:
         archive_path = args.geometry or download(
-            GEOMETRY_URL, GEOMETRY_SHA256, cache / "SatSplatDataset_PERS_geometry_v1.0.4.tar.gz"
+            GEOMETRY_URL, GEOMETRY_SHA256, cache / "SatSplatDataset_PERS_geometry_v1.0.0.tar.gz"
         )
         geometry = stack.enter_context(tarfile.open(archive_path, "r:gz"))
         layout = json.load(geometry.extractfile("inputs.json"))

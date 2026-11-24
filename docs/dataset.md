@@ -4,7 +4,7 @@ The prepared benchmark data contain the 13 sites reported in Tables S1 and S2 of
 
 ## Prepare benchmark scenes
 
-The public geometry archive contains fitted affine cameras, stereo-derived coarse DSMs and DFC2019 crop offsets. The setup script reads seven JAX and three OMA scenes from the official DFC2019 Track 3 files. It retrieves the three IARPA scenes from the EOGS release and generates orthophotos from the coarse DSM and affine cameras locally. Automatic downloads are checked against SHA-256 digests. [Geometry release](https://github.com/GDAOSU/SatSplat-PERS/releases/tag/v1.0.4) · [EOGS dataset](https://github.com/mezzelfo/EOGS/releases/tag/dataset_v01)
+The public geometry archive contains fitted affine cameras, stereo-derived coarse DSMs and DFC2019 crop offsets. The setup script reads seven JAX and three OMA scenes from the official DFC2019 Track 3 files. It retrieves the three IARPA scenes from the EOGS release and generates orthophotos from the coarse DSM and affine cameras locally. Automatic downloads are checked against SHA-256 digests. [Geometry release](https://github.com/GDAOSU/SatSplat/releases/tag/v1.0.0) · [EOGS dataset](https://github.com/mezzelfo/EOGS/releases/tag/dataset_v01)
 
 ```bash
 pixi run --locked python scripts/fetch_dataset.py data/SatSplatDataset_PERS --dfc-source /path/to/Track3
