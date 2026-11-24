@@ -31,17 +31,16 @@ pixi run --locked sstrain data_root=data/SatSplatSynthetic site=SYNTHETIC \
 
 ## Reproduce a benchmark site
 
-Obtain the benchmark inputs through their providers or your lab's authorized copy. The prepared data use the layout and input conventions in the [dataset guide](docs/dataset.md). Point the environment variable at the directory that contains the site folders.
+The setup script downloads the published SatSplat geometry and the EOGS benchmark inputs, then generates initialization orthophotos locally. It prepares seven scenes by default. Use `--dfc-source` with the official Track 3 files for the other DFC2019 scenes. [Dataset setup and source attribution](docs/dataset.md) · [Geometry archive](https://github.com/GDAOSU/SatSplat-PERS/releases/tag/v1.0.1)
 
 ```bash
-export SATSPLAT_DATA_ROOT=/path/to/SatSplatDataset_PERS
-(cd "$SATSPLAT_DATA_ROOT" && sha256sum --quiet -c SHA256SUMS)
-
+pixi run --locked python scripts/fetch_dataset.py data/SatSplatDataset_PERS --sites JAX_068
+export SATSPLAT_DATA_ROOT="$PWD/data/SatSplatDataset_PERS"
 pixi run --locked sstrain site=JAX_068 hydra.run.dir=runs/JAX_068
 pixi run --locked ssrender runs/JAX_068/final_iter030000/state_dict.pth
 ```
 
-The PERS preset runs for 30,000 updates and samples one view per step. It starts shadow mapping at the first update and enables affine camera refinement after 3,000 steps. The seed, density control settings and paper loss weights are recorded in each run's resolved `config.yaml`. Use `pixi run --locked sstrain --cfg job --resolve` to inspect the full setting. Put `dataset.preload=false` on the command line to read images on demand.
+The PERS preset runs for 30,000 updates and samples one view per step. It starts shadow mapping at the first update and enables affine camera refinement after 3,000 steps. The seed, density control settings and paper loss weights are recorded in each run's resolved `config.yaml`. Use `sstrain --cfg job --resolve` to inspect the full setting. Put `dataset.preload=false` on the command line to read images on demand.
 
 The published tables report these sites. Use Hydra's multirun to run each scene in sequence.
 
